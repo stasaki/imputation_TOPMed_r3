@@ -1,0 +1,7 @@
+name: gwas_imputation
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - bcftools
+  - plink
