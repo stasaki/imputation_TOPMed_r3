@@ -9,6 +9,8 @@ fread("AMPAD_WGS/tmp/NIA_JG_1898_samples_GRM_WGS_b37_JointAnalysis01_2017-12-08.
               mutate(type="Diverse"))%>%
   bind_rows(.,read.table("combined_plink/TOPMed_r3_array_hg38.fam")%>%
               mutate(type="Array"))%>%
+  bind_rows(.,read.table("ADGC_RMM_AA/tmp/adgc.rosmapmars.afam.vFinal_uniq_pos_hg38_filtered-updated-chr1.fam")%>%
+              mutate(type="ADGC_RMM_AA"))%>%
   group_by(V1)%>%
   mutate(flag=duplicated(V1))%>%
   filter(flag)%>%
@@ -24,6 +26,8 @@ ds$data[[1]]%>%
 ds$data[[2]] %>%
   write.table(.,file="tmp_plink/Array_remove.txt",append = F,quote = F,sep = "\t",row.names = F,col.names = T)
 
+ds$data[[3]] %>%
+  write.table(.,file="tmp_plink/ADGC_RMM_AA_remove.txt",append = F,quote = F,sep = "\t",row.names = F,col.names = T)
 
 
 ds$data[[1]]%>%mutate(V3=paste0(V1,"_",V2))%>%dplyr::select(V3)%>%
@@ -32,7 +36,8 @@ ds$data[[1]]%>%mutate(V3=paste0(V1,"_",V2))%>%dplyr::select(V3)%>%
 ds$data[[2]]%>%mutate(V3=paste0(V1,"_",V2))%>%dplyr::select(V3)%>%
   write.table(.,file="tmp/Array_remove.txt",append = F,quote = F,sep = "\t",row.names = F,col.names = F)
 
-
+ds$data[[3]]%>%mutate(V3=paste0(V1,"_",V2))%>%dplyr::select(V3)%>%
+  write.table(.,file="tmp/ADGC_RMM_AA_remove.txt",append = F,quote = F,sep = "\t",row.names = F,col.names = F)
 
 
 fread("AMPAD_WGS/tmp/NIA_JG_1898_samples_GRM_WGS_b37_JointAnalysis01_2017-12-08.recalibrated_variants_hg38_dn.QCed1_filtered-updated-chr1.fam")%>%
@@ -52,6 +57,9 @@ fread("AMPAD_WGS/tmp/NIA_JG_1898_samples_GRM_WGS_b37_JointAnalysis01_2017-12-08.
   bind_rows(.,
             read.table("San1_CHOP_RMM_AA/tmp/chop.rosmap.afam.vFinal_uniq_pos_QCed_hg38_filtered-updated-chr1.fam")%>%
               mutate(type="CHOP_RMM_AA"))%>%
+  bind_rows(.,
+            read.table("ADGC_RMM_AA/tmp/adgc.rosmapmars.afam.vFinal_uniq_pos_hg38_filtered-updated-chr1.fam")%>%
+              mutate(type="ADGC_RMM_AA"))%>%
   dplyr::select(V1,type)%>%
   mutate(V1=as.character(V1)%>%str_pad(.,8,pad="0")) -> array_type
 
@@ -102,5 +110,5 @@ fwrite(pca_eigenvec,file="combined_plink/TOPMed_r3_all_hg38_pca.eigenvec.txt.gz"
 
 
 pca_eigenvec%>%
-  ggplot(.,aes(PC1,PC2))+geom_point()
+  ggplot(.,aes(PC1,PC2,color=Type))+geom_point()
 

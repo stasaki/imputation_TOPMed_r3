@@ -9,12 +9,14 @@ wget https://www.chg.ox.ac.uk/~wrayner/tools/HRC-1000G-check-bim-v4.3.0.zip
 #This can be downloaded from the Bravo Website https://bravo.sph.umich.edu/freeze5/hg38/
 wget https://www.chg.ox.ac.uk/~wrayner/tools/CreateTOPMed.zip
 ./CreateTOPMed.pl -i bravo-dbsnp-all.vcf.gz
-
-bash imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_Broad_1709/03_imputation/output/unimputed_bed/Merge.phaseIV.final_uniq_pos_QCed_hg38 San1_Broad_1709
-bash imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_CHOP_382/03_imputation/output/unimputed_bed/chop.rosmap.euam.vFinal_uniq_pos_QCed_hg38 San1_CHOP_382
-bash imputation.sh gs://shinya_test/RADC_omics/Genotype/BU_genotyping/03_imputation/output/unimputed_bed/BU_measured_uniq_pos_QCed_hg38 BU_genotyping
-bash imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_CHOP_RMM_AA/03_imputation/output/unimputed_bed/chop.rosmap.afam.vFinal_uniq_pos_QCed_hg38 San1_CHOP_RMM_AA
-
+ git clone https://github.com/vcftools/vcftools.git
+ 
+conda activate gwas_imputation
+bash ./script/imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_Broad_1709/03_imputation/output/unimputed_bed/Merge.phaseIV.final_uniq_pos_QCed_hg38 San1_Broad_1709
+bash ./script/imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_CHOP_382/03_imputation/output/unimputed_bed/chop.rosmap.euam.vFinal_uniq_pos_QCed_hg38 San1_CHOP_382
+bash ./script/imputation.sh gs://shinya_test/RADC_omics/Genotype/BU_genotyping/03_imputation/output/unimputed_bed/BU_measured_uniq_pos_QCed_hg38 BU_genotyping
+bash ./script/imputation.sh gs://shinya_test/RADC_omics/Genotype/San1_CHOP_RMM_AA/03_imputation/output/unimputed_bed/chop.rosmap.afam.vFinal_uniq_pos_QCed_hg38 San1_CHOP_RMM_AA
+bash ./script/imputation.sh gs://shinya_test/Genotype/ADGC_RMM_AA/adgc.rosmapmars.afam.vFinal_uniq_pos_hg38 ADGC_RMM_AA
 
 
 cd San1_Broad_1709
@@ -28,6 +30,10 @@ nohup /home/shinya/Resource/GENETICS_Resource/softwares/imputationbot/imputation
 
 cd San1_CHOP_RMM_AA
 nohup /home/shinya/Resource/GENETICS_Resource/softwares/imputationbot/imputationbot  download  job-20240401-203900-049 --password ""
+
+
+cd ADGC_RMM_AA
+nohup /data/shinya/shinya/Resource/GENETICS_Resource/softwares/imputationbot/imputationbot  download  job-20240725-015404-612 --password ""
 
 
 # Find all VCF files and index them

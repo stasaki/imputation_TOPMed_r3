@@ -16,11 +16,12 @@ BEDNAME=$(basename $BUCKET_LOCATION)
 #conda activate plink
 
 # Set environment variables
-export PLINK_HOME=~/miniconda3/envs/plink/bin/
+export PLINK_HOME=~/miniconda3/envs/gwas_imputation/bin/
 export IC_HOME=/home/shinya/Resource/GENETICS_Resource/softwares/imputation_check/pre/v4.3.0/
 export REF=/home/shinya/Resource/GENETICS_Resource/softwares/imputation_check/ref/20240317/PASS.Variantsbravo-dbsnp-all.tab.gz
-export checkVCF_HOME=~/Resource/GENETICS_Resource/softwares/checkVCF
-export genome_LOC=~/Resource/NGS_Resource/genome/GRCh38.primary_assembly.genome.fa
+export checkVCF_HOME=/home/shinya/Resource/GENETICS_Resource/softwares/checkVCF
+export genome_LOC=/home/shinya/Resource/NGS_Resource/genome/GRCh38.primary_assembly.genome.fa
+export VCF_HOME=/home/shinya/Resource/GENETICS_Resource/softwares/vcftools/src/perl/
 export API_key=""
 
 # Make a temporary directory and move into it
@@ -84,7 +85,7 @@ fi
 for i in `seq 1 22`; do
         if [ ! -f "../${BEDNAME}_filtered-updated-chr${i}.vcf.gz" ]; then
             $PLINK_HOME/bcftools annotate --rename-chrs chr_rename.txt ${BEDNAME}_filtered-updated-chr${i}.vcf -Ov -o ${BEDNAME}_filtered-updated-chr${i}_renamed.vcf
-            $PLINK_HOME/vcf-sort ${BEDNAME}_filtered-updated-chr${i}_renamed.vcf | bgzip -c >  ../${BEDNAME}_filtered-updated-chr${i}.vcf.gz
+            $VCF_HOME/vcf-sort  ${BEDNAME}_filtered-updated-chr${i}_renamed.vcf | bgzip -c >  ../${BEDNAME}_filtered-updated-chr${i}.vcf.gz
             rm ${BEDNAME}_filtered-updated-chr${i}_renamed.vcf
         else
             echo "VCF file for chromosome ${i} already processed. Skipping."
@@ -94,7 +95,7 @@ done
 
 # Submit imputation job and cleanup only if not already done
 cd ../../
-bash ./submit_imputation_job.sh ${BEDNAME}_filtered-updated-chr $API_key $STUDY 1:22
+bash ./script/submit_imputation_job.sh ${BEDNAME}_filtered-updated-chr $API_key $STUDY 1:22
 
 # Cleanup
 #rm -rf tmp
